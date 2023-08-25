@@ -14,10 +14,13 @@ const backgroundlevel1 = new Sprite({
         y:0,
     },
     imageSrc: './img/backgroundLevel1.png',
+    frameRate: 1,
 })
 
 const player = new Player({
     collisionBlocks, 
+    imageSrc: './img/king/idle.png',
+    frameRate: 11,
 })
 
 const keys = {
