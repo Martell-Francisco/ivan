@@ -1,4 +1,5 @@
 
+
 const canvas = document.querySelector('canvas')
 const c = canvas.getContext('2d')
 
@@ -46,8 +47,34 @@ const player = new Player({
             loop: true,
             imageSrc: './img/king/runLeft.png',
         },
+        enterDoor: {
+            frameRate: 8,
+            frameBuffer: 4,
+            loop: false,
+            imageSrc: './img/king/enterDoor.png',
+            //Create a function Oncomplete
+            onComplete: () => {
+                console.log('completed animation')
+                gsap.to(overlay, {
+                    opacity: 1
+                })
+            },
+        },
     }
 })
+const doors =[
+    new Sprite({
+        position: {
+            x: 767,
+            y: 270,
+        },
+        imageSrc: './img/doorOpen.png',
+        frameRate: 5,
+        frameBuffer: 5,
+        loop: false,
+        autoplay: false,
+    }),
+]
 
 const keys = {
     w: {
@@ -60,35 +87,38 @@ const keys = {
         pressed: false,
     },
 }
-
+const overlay = {
+    opacity: 0,
+}
 let y =100
 const height = 100
 let bottom = y+100
 
 function animate() {
     window.requestAnimationFrame(animate)
+
     backgroundlevel1.draw()
-    collisionBlocks.forEach((collisionBlock=> {
+
+    //Loops through our collision block array
+    collisionBlocks.forEach((collisionBlock) => {
         collisionBlock.draw()
-    }))
+    })
 
-    player.velocity.x = 0
-if(keys.d.pressed){
-    player.switchSprite('runRight')
-    player.velocity.x = 5
-    player.lastDirection = 'right'
-}else if(keys.a.pressed){
-    player.switchSprite('runLeft')
-    player.velocity.x = -5
-    player.lastDirection = 'left'
-}
-else{ 
-    if(player.lastDirection === 'left') player.switchSprite('idleLeft')
-    else player.switchSprite('idleRight')
-}
+    //Loops through our doors array
+    doors.forEach((doors) => {
+        doors.draw()
+    })
 
+
+    player.handleInput(keys)
     player.draw()
     player.update()
+
+    c.save()
+    c.globalAlpha = overlay.opacity
+    c.fillStyle = 'black'
+    c.fillRect(0, 0, canvas.width, canvas.height)
+    c.restore()
 }
 animate()
 
