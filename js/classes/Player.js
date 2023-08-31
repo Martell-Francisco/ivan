@@ -22,17 +22,6 @@ class Player extends Sprite {
         }
         this.collisionBlocks = collisionBlocks
     }
-
-    switchSprite(name){
-        if(this.image == this.animations[name].image) return 
-        this.currentFrame = 0
-        this.image = this.animations[name].image
-        this.frameRate = this.animations[name].frameRate
-        this.frameBuffer = this.animations[name].frameBuffer
-        this.loop = this.animations[name].loop
-        this.currentAnimation = this.animations[name]
-    }
-
     update() {
         //Blue Box
         //c.fillStyle = 'rgba(0,0,225,0.5')
@@ -51,8 +40,35 @@ class Player extends Sprite {
         //     this.hitBox.height
         // )
         this.checkForVerticalCollisions()
-
     }
+    handleInput(keys){
+        if(this.preventInput) return
+        this.velocity.x = 0
+        if(keys.d.pressed){
+            this.switchSprite('runRight')
+            this.velocity.x = 5
+            this.lastDirection = 'right'
+    }   else if(keys.a.pressed){
+            this.switchSprite('runLeft')
+            this.velocity.x = -5
+            this.lastDirection = 'left'
+    }
+    else{ 
+        if(this.lastDirection === 'left') this.switchSprite('idleLeft')
+        else this.switchSprite('idleRight')
+    }
+    }
+
+    switchSprite(name){
+        if(this.image == this.animations[name].image) return 
+        this.currentFrame = 0
+        this.image = this.animations[name].image
+        this.frameRate = this.animations[name].frameRate
+        this.frameBuffer = this.animations[name].frameBuffer
+        this.loop = this.animations[name].loop
+        this.currentAnimation = this.animations[name]
+    }
+
     updateHitbox() {
         this.hitBox = {
             position: {
@@ -63,23 +79,7 @@ class Player extends Sprite {
             height: 50,
         }
     }
-    handleInput(keys){
-        if(this.preventInput) return
-        player.velocity.x = 0
-        if(keys.d.pressed){
-            player.switchSprite('runRight')
-            player.velocity.x = 5
-            player.lastDirection = 'right'
-    }   else if(keys.a.pressed){
-            player.switchSprite('runLeft')
-            player.velocity.x = -5
-            player.lastDirection = 'left'
-    }
-    else{ 
-        if(player.lastDirection === 'left') player.switchSprite('idleLeft')
-        else player.switchSprite('idleRight')
-    }
-    }
+
 
     checkForHorizontalCollisions(){
         for (let i = 0; i < this.collisionBlocks.length; i++){
