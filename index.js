@@ -50,8 +50,11 @@ const player = new Player({
                 gsap.to(overlay, {
                     opacity: 1,
                     onComplete: () => {
+                        
                         level++
+                        if(level === 4) location.href="home.html"
                         levels[level].init()
+                        //if(level === 4) location.href="home.html"
                         player.switchSprite('idleRight')
                         player.preventInput = false
                         gsap.to(overlay, {
